@@ -1,3 +1,6 @@
 mcp[cli]
 yfinance
 fastmcp
+fastapi[standard]
+httpx
+uvicorn
