@@ -38,7 +38,7 @@ VS Code MCP configuration (mcp.json):
         }
     ],
     "servers": {
-        "weather-sse": {
+        "stock-mcp-sse": {
             "type": "sse",
             "url": "http://localhost:8000/sse",
             "headers": {
@@ -52,7 +52,7 @@ VS Code MCP configuration (mcp.json):
 ## Deploy to Azure Container Apps
 
 ```bash
-az containerapp up -g <RESOURCE_GROUP_NAME> -n weather-mcp --environment mcp -l westus --env-vars API_KEYS=<AN_API_KEY> --source .
+az containerapp up -g <RESOURCE_GROUP_NAME> -n stock-mcp --environment mcp -l westus --env-vars API_KEYS=<AN_API_KEY> --source .
 ```
 
 If the deployment is successful, the Azure CLI returns the URL of the app. You can use this URL to connect to the server from Visual Studio Code.
