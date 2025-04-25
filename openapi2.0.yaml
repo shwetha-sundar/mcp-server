@@ -1,0 +1,49 @@
+swagger: "2.0"
+info:
+  title: Stock Price Server
+  version: "1.0.0"
+  description: Provides stock prices, historical data, and comparisons using Yahoo Finance.
+
+host: stock-mcp.gentleplant-d8b5cd70.westus.azurecontainerapps.io
+schemes:
+  - https
+basePath: /
+definitions:
+  QueryResponse:
+    type: object
+    properties:
+      jsonrpc:
+        type: string
+      id:
+        type: string
+      method:
+        type: string
+      params:
+        type: object
+      result:
+        type: object
+      error:
+        type: object
+
+paths:
+  /sse:
+    get:
+      summary: MCP Server Actions for Stock Price Server
+      parameters:
+        - in: query
+          name: sessionId
+          type: string
+          required: false
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Immediate Response
+          schema:
+            $ref: '#/definitions/QueryResponse'
+        '201':
+          description: Created and will follow callback
+      operationId: StockAssistant
+      tags:
+        - Agentic
+        - McpSse

@@ -5,10 +5,18 @@ from stock_price_server import mcp
 from api_key_auth import ensure_valid_api_key
 import uvicorn
 
+# Create FastAPI application with metadata
+app = FastAPI(
+    title="FastAPI MCP SSE",
+    description="A demonstration of Server-Sent Events with Model Context "
+    "Protocol integration",
+    version="0.1.0",
+)
 
-app = FastAPI(docs_url=None, redoc_url=None, dependencies=[Depends(ensure_valid_api_key)])
-
+# Create SSE transport instance for handling server-sent events
 sse = SseServerTransport("/messages/")
+
+# Mount the /messages path to handle SSE message posting
 app.router.routes.append(Mount("/messages", app=sse.handle_post_message))
 
 @app.get("/sse", tags=["MCP"])
@@ -20,13 +28,18 @@ async def handle_sse(request: Request):
     ):
         init_options = mcp._mcp_server.create_initialization_options()
 
-        await mcp._mcp_server.run(
-            read_stream,
-            write_stream,
-            init_options,
-        )
+        try:
+            await mcp._mcp_server.run(
+                read_stream,
+                write_stream,
+                init_options,
+            )
+        except RuntimeError as e:
+            return {"error": str(e)}
 
+@app.get("/", tags=["Health"])
+async def root():
+    return {"message": "MCP Stock Skill is running!"}
 
-        if __name__ == "__main__":
-
-            uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
