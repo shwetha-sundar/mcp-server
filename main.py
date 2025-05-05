@@ -20,7 +20,7 @@ sse = SseServerTransport("/messages/")
 app.router.routes.append(Mount("/messages", app=sse.handle_post_message))
 
 @app.get("/sse", tags=["MCP"])
-async def handle_sse(request: Request):
+async def handle_sse(request: Request, _: str = Depends(ensure_valid_api_key)):
     
     async with sse.connect_sse(request.scope, request.receive, request._send) as (
         read_stream,
